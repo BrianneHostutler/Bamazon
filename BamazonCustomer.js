@@ -40,6 +40,12 @@ prompt.get(["id", "howMany"], function (err, result) {
 	          		console.log('Ok! We have enough '+res[0].ProductName+' in stock.');
 	          		var totalCost= individPrice * CustomerQuantity;
 	          		console.log("You owe $" +totalCost);
+	          		connection.query('UPDATE Products SET StockQuantity = '+newQuantity+' WHERE ItemID ='+CustomerPickID, function(err, res){
+            		if (err) throw err;
+            			connection.query('SELECT ItemID, ProductName, DepartmentName, Price, StockQuantity FROM products WHERE ItemID ='+CustomerPickID, function(err, res){
+              				console.log(res);
+              			});	
+            		});
 	          	}	
        			else if(want>have && have !=0){
 				    console.log('Insufficient quantity. We only have '+have+' in stock.');

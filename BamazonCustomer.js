@@ -15,41 +15,37 @@ connection.connect(function(err){
   }
   console.log('Connection established');
 
-  // connection.query("SELECT * FROM Products", function(err, res) {
-		// 		  if (err) throw err;
-		// 		  console.log(res);
-		// });
 
-	prompt.get(["id", "howMany"], function (err, result) {
-	    if (err){
-	        console.log(err)
-	    }
+prompt.start();
 
-		var CustomerPickID = parseInt(result.id);
-		var CustomerQuantity = parseInt(result.howMany);
+prompt.get(["id", "howMany"], function (err, result) {
+	if (err){
+	    console.log(err)
+	}
 
-		console.log("id=" + CustomerPickID, "how many=" + CustomerQuantity);
+	var CustomerPickID = parseInt(result.id);
+	var CustomerQuantity = parseInt(result.howMany);
 
-		function selectID(){
-			connection.query('SELECT * FROM Products WHERE ItemID =' + CustomerPickID, function(err, res) { 
+	console.log("id=" + CustomerPickID, "how many=" + CustomerQuantity);
+
+	function selectID(){
+		connection.query('SELECT * FROM Products WHERE ItemID =' + CustomerPickID, function(err, res) { 
 				if (err) throw err;
 				console.log(res);
-			});
-		};
-
-		selectID();	
+				want = CustomerQuantity;
+       			have = res[0].StockQuantity;
+       			newQuantity = have - want;
+       			if (newQuantity >= 0){
+	          		console.log('Ok! We have enough '+res[0].ProductName+' in stock.');
+	          	}	
+       			else if(want>have && have !=0){
+				    console.log('Insufficient quantity. We only have '+have+' in stock.');
+			  	}
+			  	else{
+		          return false
+		        }
+		});
+	};
+	selectID();	
 	});
-		// var query = connection.query('INSERT INTO Products SET ?', post, function(err, result) { 
-		// });
-
-	
-
-		// if (stockQuantity<=0){
-		// 	console.log("Insufficient quantity");
-		// }
-		// else{
-		// UPDATE Products SET stockQuantity = x WHERE id = x
-		// };
-
 });
-
